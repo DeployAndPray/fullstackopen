@@ -1,15 +1,12 @@
+import { Part } from "./Part"
+
+
 export function Content(props) {
   return(
   <>
-    <p>
-      {props.parts[0].title} {props.parts[0].total}
-    </p>
-    <p>
-      {props.parts[1].title} {props.parts[1].total}
-    </p>
-    <p>
-      {props.parts[2].title} {props.parts[2].total}
-    </p>
+      <Part title={props.parts[0].name} total={props.parts[0].exercises} />
+      <Part title={props.parts[1].name} total={props.parts[1].exercises} />
+      <Part title={props.parts[2].name} total={props.parts[2].exercises} />
   </>
   )
 }
