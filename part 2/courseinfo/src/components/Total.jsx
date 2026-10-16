@@ -1,5 +1,5 @@
-export function Total(props) {
+export function Total({ parts }) {
 
-  const total = props.parts.reduce( (acc, value) => acc +  value.exercises, 0 )
-  return <p>Number of exercises {total}</p>;
+  const total = parts.reduce( (acc, value) => acc +  value.exercises, 0 )
+  return <p>Total of {total} exercises</p>;
 }
