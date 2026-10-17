@@ -1,4 +1,4 @@
-import axios from 'axios';
+import personService from "./services/persons.service";
 import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { Form } from "./components/Form";
@@ -10,26 +10,22 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  
-
-  useEffect(()=>{
-    const path = 'http://localhost:3001/persons'
-    axios
-      .get(path)
-      .then((resp) => setPersons( resp.data ))
-  },[])
-
+  useEffect(() => {
+    personService.getAll().then((data) => setPersons(data));
+  }, []);
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const newPerson = {
       name: newName,
-      phone: newPhone,
+      number: newPhone,
+      id: persons.length + 1,
     };
 
     if (isDuplicateName()) {
       alert(`${newName} is already added to phonebook`);
     } else {
+      personService.newPerson(newPerson);
       setPersons(persons.concat(newPerson));
     }
     setNewName("");
@@ -51,7 +47,7 @@ const App = () => {
       <Form
         onSubmit={handleOnSubmit}
         name={[newName, setNewName]}
-        phone={[newPhone, setNewPhone]}
+        number={[newPhone, setNewPhone]}
       />
       <h2>Numbers</h2>
       <List persons={persons} searchTerm={searchTerm} />

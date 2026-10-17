@@ -1,6 +1,6 @@
-export function Form({ onSubmit, name, phone }) {
+export function Form({ onSubmit, name, number }) {
   const [newName, setNewName] = name;
-  const [newPhone, setNewPhone] = phone;
+  const [newNumber, setNewNumber] = number;
 
   return (
     <form onSubmit={onSubmit}>
@@ -9,7 +9,7 @@ export function Form({ onSubmit, name, phone }) {
         <input value={newName} onChange={(e) => setNewName(e.target.value)} />
         <br />
         phone:{" "}
-        <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} />
+        <input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} />
       </div>
       <div>
         <button type="submit">add</button>
