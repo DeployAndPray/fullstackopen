@@ -5,9 +5,9 @@ export function List({ persons, searchTerm }) {
         .filter((person) =>
           person.name.toLocaleLowerCase().includes(searchTerm),
         )
-        .map((person, i) => (
-          <li key={person.name.concat("_", i)}>
-            {person.name} - {person.phone}
+        .map((person) => (
+          <li key={person.id}>
+            {person.name} - {person.number}
           </li>
         ))}
     </ul>
