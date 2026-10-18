@@ -14,29 +14,48 @@ const App = () => {
     personService.getAll().then((data) => setPersons(data));
   }, []);
 
+  const createNewPersonObj = () => ({
+    name: newName,
+    number: newPhone,
+  });
+
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    const newPerson = {
-      name: newName,
-      number: newPhone,
-      id: persons.length + 1,
-    };
+    const newPerson = createNewPersonObj();
+    const dupp = findDuplicatePerson();
+    const confirmDuppUpdate = () =>
+      window.confirm(`Do you want to update ${newPerson.name}`);
 
-    if (isDuplicateName()) {
-      alert(`${newName} is already added to phonebook`);
-    } else {
-      personService.newPerson(newPerson);
-      setPersons(persons.concat(newPerson));
+    if (dupp && confirmDuppUpdate()) {
+      personService
+        .updateNumber(dupp.id, newPerson)
+        .then((data) =>
+          setPersons(
+            persons.map((person) => (person.id === dupp.id ? data : person)),
+          ),
+        );
+    } else if (!dupp) {
+      personService
+        .newPerson(newPerson)
+        .then((data) => setPersons(persons.concat(data)));
     }
+
     setNewName("");
     setNewPhone("");
   };
 
-  const isDuplicateName = () =>
-    persons.some((person) => person.name === newName);
+  const findDuplicatePerson = () =>
+    persons.filter((person) => person.name === newName)[0];
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const removePerson = (id) => {
+    personService.deletePerson(id).then((data) => {
+      const remaining = persons.filter((person) => person.id !== data.id);
+      setPersons(remaining);
+    });
   };
 
   return (
@@ -50,7 +69,7 @@ const App = () => {
         number={[newPhone, setNewPhone]}
       />
       <h2>Numbers</h2>
-      <List persons={persons} searchTerm={searchTerm} />
+      <List persons={persons} searchTerm={searchTerm} onClick={removePerson} />
     </div>
   );
 };
