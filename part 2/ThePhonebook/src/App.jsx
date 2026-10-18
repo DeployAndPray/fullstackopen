@@ -1,14 +1,20 @@
 import personService from "./services/persons.service";
+import notificationService from "./services/notification.service";
 import { useEffect, useState } from "react";
-import { Filter } from "./components/Filter";
-import { Form } from "./components/Form";
-import { List } from "./components/List";
+import { Filter } from "./components/Filter/Filter.component";
+import { Form } from "./components/Form/Form.component";
+import { List } from "./components/List/List.component";
+import { Notification } from "./components/notification/Notification.component";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [notification, setNotification] = useState({
+    type: "",
+    msg: "",
+  });
 
   useEffect(() => {
     personService.getAll().then((data) => setPersons(data));
@@ -22,22 +28,43 @@ const App = () => {
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const newPerson = createNewPersonObj();
-    const dupp = findDuplicatePerson();
+    const dup = findDuplicatePerson();
     const confirmDuppUpdate = () =>
       window.confirm(`Do you want to update ${newPerson.name}`);
 
-    if (dupp && confirmDuppUpdate()) {
+    if (dup && confirmDuppUpdate()) {
       personService
-        .updateNumber(dupp.id, newPerson)
-        .then((data) =>
+        .updateNumber(dup.id, newPerson)
+        .then((data) => {
           setPersons(
-            persons.map((person) => (person.id === dupp.id ? data : person)),
-          ),
+            persons.map((person) => (person.id === dup.id ? data : person)),
+          );
+
+          notificationService.showNotification(
+            "success",
+            "user updated",
+            setNotification,
+          );
+        })
+        .catch(() => {
+          notificationService.showNotification(
+            "error",
+            `user ${dup.name}  was already delete`,
+            setNotification,
+          );
+
+          personService.getAll().then((data) => setPersons(data));
+        });
+    } else if (!dup) {
+      personService.newPerson(newPerson).then((data) => {
+        setPersons(persons.concat(data));
+
+        notificationService.showNotification(
+          "success",
+          "user added",
+          setNotification,
         );
-    } else if (!dupp) {
-      personService
-        .newPerson(newPerson)
-        .then((data) => setPersons(persons.concat(data)));
+      });
     }
 
     setNewName("");
@@ -56,12 +83,18 @@ const App = () => {
       const remaining = persons.filter((person) => person.id !== data.id);
       setPersons(remaining);
     });
+
+    notificationService.showNotification(
+      "success",
+      "user removed",
+      setNotification,
+    );
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification msg={notification.msg} msgType={notification.type} />
       <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
       <Form
         onSubmit={handleOnSubmit}
