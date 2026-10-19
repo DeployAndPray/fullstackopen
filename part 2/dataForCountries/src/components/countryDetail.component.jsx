@@ -14,7 +14,7 @@ export function CountryDetail({ country }) {
           <li key={lang}>{lang}</li>
         ))}
       </ul>
-      <i>{flag}</i>
+      <i style={{ fontSize: "200px" }}>{flag}</i>
     </>
   );
 }

@@ -7,7 +7,6 @@ function App() {
   const [searchCountry, setSearchCountry] = useState("");
   const [countries, setCountries] = useState([]);
 
-
   useEffect(() => {
     countryService.getAllCountries().then((data) => setCountries(data));
   }, []);
@@ -21,7 +20,11 @@ function App() {
     <>
       <Search value={searchCountry} onChange={handleSearch} />
       <br />
-      <Results countries={ countries } searchValue={ searchCountry } />
+      <Results
+        countries={countries}
+        searchValue={searchCountry}
+        searchUpdate={setSearchCountry}
+      />
     </>
   );
 }
