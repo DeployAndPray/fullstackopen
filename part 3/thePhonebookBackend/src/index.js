@@ -20,6 +20,11 @@ app.get("/api/persons/:id", (req, res) => {
   res.json(found);
 });
 
+app.delete("/api/persons/:id", (req, res) => {
+  phonebook = phonebook.filter((p) => p.id !== req.params.id);
+  res.sendStatus(204).end();
+});
+
 app.get("/api/info", (req, res) => {
   const entries = phonebook.length;
   const template = `Phonebook has info for ${entries} people.</br>${new Date()}`;
