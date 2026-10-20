@@ -1,4 +1,5 @@
 const express = require("express");
+const { genId } = require("./services/keygen.service");
 let phonebook = require("./data/phonebook").phonebook;
 
 const app = express();
@@ -22,7 +23,14 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   phonebook = phonebook.filter((p) => p.id !== req.params.id);
-  res.sendStatus(204).end();
+  res.sendStatus(204);
+});
+
+app.post("/api/persons", (req, res) => {
+  const data = req.body;
+  data.id = genId();
+  phonebook = phonebook.concat(data);
+  res.send(data);
 });
 
 app.get("/api/info", (req, res) => {
