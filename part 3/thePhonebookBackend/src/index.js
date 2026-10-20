@@ -1,20 +1,22 @@
-const express = require('express')
-let phonebook = require("./data/phonebook").phonebook
+const express = require("express");
+let phonebook = require("./data/phonebook").phonebook;
 
-const app = express()
-const PORT = 3001
+const app = express();
+const PORT = 3001;
 
-app.use(express.json())
+app.use(express.json());
 
+app.get("/api/persons", (req, res) => {
+  res.json(phonebook);
+});
 
+app.get("/api/info", (req, res) => {
+  const entries = phonebook.length;
+  const template = `Phonebook has info for ${entries} people.</br>${new Date()}`;
+  res.contentType("text/html");
+  res.send(template);
+});
 
-app.get('/api/persons', (req, res)=>{
-  res.json(phonebook)
-})
-
-
-
-app.listen(
-  PORT, 
-  ()=> console.log(`server running on ${PORT}`)
-)
+app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
+});
