@@ -28,9 +28,19 @@ app.delete("/api/persons/:id", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
   const data = req.body;
-  data.id = genId();
-  phonebook = phonebook.concat(data);
-  res.send(data);
+  const { name, number } = data ?? {};
+
+  if (!name || !number) {
+    return res.status(400).json({ error: "The name or number is missing" });
+  }
+
+  if (phonebook.some((p) => p.name === name.trim())) {
+    return res.status(409).json({ error: "name must be unique" });
+  }
+
+  const person = { id: genId(), name, number };
+  phonebook = phonebook.concat(person);
+  res.status(201).json(person);
 });
 
 app.get("/api/info", (req, res) => {
