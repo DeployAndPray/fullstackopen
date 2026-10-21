@@ -1,11 +1,19 @@
 const express = require("express");
+const morgan = require("morgan");
 const { genId } = require("./services/keygen.service");
 let phonebook = require("./data/phonebook").phonebook;
 
 const app = express();
 const PORT = 3001;
 
+morgan.token("data", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
 app.use(express.json());
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :data"),
+);
 
 app.get("/api/persons", (req, res) => {
   res.json(phonebook);
