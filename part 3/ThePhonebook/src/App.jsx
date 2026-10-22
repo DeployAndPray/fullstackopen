@@ -79,16 +79,15 @@ const App = () => {
   };
 
   const removePerson = (id) => {
-    personService.deletePerson(id).then((data) => {
-      const remaining = persons.filter((person) => person.id !== data.id);
-      setPersons(remaining);
-    });
+    personService.deletePerson(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
 
-    notificationService.showNotification(
-      "success",
-      "user removed",
-      setNotification,
-    );
+      notificationService.showNotification(
+        "success",
+        "user removed",
+        setNotification,
+      );
+    });
   };
 
   return (
