@@ -1,0 +1,20 @@
+.notificationContainer {
+  padding: 10px;
+  margin: 20px 0;
+  border: solid 3px #04509a;
+  background: #7bb6f0;
+  font-weight: bold;
+  color: #04509a;
+}
+
+.notificationContainer.error {
+  border-color: #660808;
+  background-color: #ff0808;
+  color: #660808;
+}
+
+.notificationContainer.success {
+  border-color: #0d901f;
+  background-color: #00de1f;
+  color: #0d901f;
+}
