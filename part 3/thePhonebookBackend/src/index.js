@@ -1,6 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-const { genId } = require("./services/keygen.service");
+const Contact = require("./models/contact");
 let phonebook = require("./data/phonebook").phonebook;
 
 const app = express();
@@ -17,7 +18,7 @@ app.use(
 );
 
 app.get("/api/persons", (req, res) => {
-  res.json(phonebook);
+  Contact.find({}).then((data) => res.json(data));
 });
 
 app.get("/api/persons/:id", (req, res) => {
@@ -43,13 +44,14 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json({ error: "The name or number is missing" });
   }
 
-  if (phonebook.some((p) => p.name === name.trim())) {
-    return res.status(409).json({ error: "name must be unique" });
-  }
+  const newContact = new Contact({
+    name,
+    number,
+  });
 
-  const person = { id: genId(), name, number };
-  phonebook = phonebook.concat(person);
-  res.status(201).json(person);
+  newContact.save().then((savedContact) => {
+    res.status(201).json(savedContact);
+  });
 });
 
 app.get("/api/info", (req, res) => {
