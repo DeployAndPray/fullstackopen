@@ -14,8 +14,15 @@ mongoose
   });
 
 const contactSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minLength: 3,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    match: [/^\d{2,3}-\d+$/, '{VALUE} is not a valid phone number'],
+  }, 
 });
 
 contactSchema.set("toJSON", {

@@ -56,15 +56,24 @@ const App = () => {
           personService.getAll().then((data) => setPersons(data));
         });
     } else if (!dup) {
-      personService.newPerson(newPerson).then((data) => {
-        setPersons(persons.concat(data));
+      personService
+        .newPerson(newPerson)
+        .then((data) => {
+          setPersons(persons.concat(data));
 
-        notificationService.showNotification(
-          "success",
-          "user added",
-          setNotification,
-        );
-      });
+          notificationService.showNotification(
+            "success",
+            "user added",
+            setNotification,
+          );
+        })
+        .catch((e) => {
+          notificationService.showNotification(
+            "error",
+            e.response.data.error,
+            setNotification,
+          );
+        });
     }
 
     setNewName("");
