@@ -29,10 +29,10 @@ const App = () => {
     event.preventDefault();
     const newPerson = createNewPersonObj();
     const dup = findDuplicatePerson();
-    const confirmDuppUpdate = () =>
+    const confirmDupUpdate = () =>
       window.confirm(`Do you want to update ${newPerson.name}`);
 
-    if (dup && confirmDuppUpdate()) {
+    if (dup && confirmDupUpdate()) {
       personService
         .updateNumber(dup.id, newPerson)
         .then((data) => {

@@ -9,3 +9,6 @@ Routes:
       - DELETE remove person by id
   - `/api/info`
     - GET Fetch server info
+
+
+  
